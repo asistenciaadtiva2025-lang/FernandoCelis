@@ -22,6 +22,7 @@ import {
   X
 } from 'lucide-react';
 import { SenaLogo } from './SenaLogo';
+import { VideoTutorialModal } from './VideoTutorialModal';
 import { LearnerProfile, SENA_REGIONALES, SENA_CENTROS_EJEMPLO } from '../data/senaData';
 import { googleSignIn } from '../services/googleAuth';
 import { playSound } from '../utils/audio';
@@ -217,25 +218,14 @@ export function RoleLandingPage({
           Ver Video Tutorial de Inducción
         </button>
 
-        {/* Video Modal */}
-        {isVideoModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="relative w-full max-w-4xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl">
-              <button
-                onClick={() => setIsVideoModalOpen(false)}
-                className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-              <iframe
-                src="https://drive.google.com/file/d/19_DcgumyNW0R8CJKVlGtveUF6tmSugzGfbVubh0sH2A/preview"
-                className="w-full h-full"
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-              />
-            </div>
-          </div>
-        )}
+        {/* Video Tutorial Modal with Playback Speed Controls */}
+        <VideoTutorialModal
+          isOpen={isVideoModalOpen}
+          onClose={() => setIsVideoModalOpen(false)}
+          videoUrl="https://drive.google.com/file/d/19_DcgumyNW0R8CJKVlGtveUF6tmSugzGfbVubh0sH2A/preview"
+          driveWebUrl="https://docs.google.com/videos/d/19_DcgumyNW0R8CJKVlGtveUF6tmSugzGfbVubh0sH2A/play?usp=sharing"
+          soundEnabled={soundEnabled}
+        />
 
         {/* Mobile View Switcher */}
         <div className="mt-6 flex sm:hidden rounded-xl p-1 bg-slate-200 dark:bg-blue-950/60 max-w-xs mx-auto">
@@ -270,7 +260,7 @@ export function RoleLandingPage({
           {/* COLUMN 1: ROL APRENDIZ (Sin Clave - Caracterización de Datos)             */}
           {/* ========================================================================= */}
           <div className={`lg:col-span-7 rounded-3xl border transition-all duration-300 shadow-xl overflow-hidden ${
-            mobileTab !== 'aprendiz' ? 'hidden sm:block' : ''
+            isVideoModalOpen ? 'hidden' : (mobileTab !== 'aprendiz' ? 'hidden sm:block' : '')
           } ${
             isDarkMode 
               ? 'bg-[#081226]/90 border-emerald-500/30 shadow-emerald-950/30 ring-1 ring-emerald-500/20' 
@@ -459,7 +449,7 @@ export function RoleLandingPage({
           {/* COLUMN 2: ROL INSTRUCTOR / COORDINADOR (Requiere Clave Sena1234)         */}
           {/* ========================================================================= */}
           <div className={`lg:col-span-5 rounded-3xl border transition-all duration-300 shadow-xl overflow-hidden flex flex-col ${
-            mobileTab !== 'instructor' ? 'hidden sm:flex' : 'flex'
+            isVideoModalOpen ? 'hidden' : (mobileTab !== 'instructor' ? 'hidden sm:flex' : 'flex')
           } ${
             isDarkMode 
               ? 'bg-[#0A1224]/90 border-blue-600/30 shadow-blue-950/40 ring-1 ring-blue-500/20' 
